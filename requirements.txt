@@ -1,0 +1,6 @@
+
+matplotlib
+streamlit
+opencv-python
+ultralytics
+pytesseract
