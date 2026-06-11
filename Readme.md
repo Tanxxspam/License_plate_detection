@@ -27,5 +27,5 @@ The trained model achieved highly reliable bounding-box accuracy during validati
 
 1. **Clone the Repository:**
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/automatic-license-plate-detection.git](https://github.com/Tanxxspam/automatic-license-plate-detection.git)
+   git clone [https://github.com/Tanxxspam/automatic-license-plate-detection.git](https://github.com/Tanxxspam/automatic-license-plate-detection.git)
    cd automatic-license-plate-detection
