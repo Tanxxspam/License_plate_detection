@@ -4,16 +4,17 @@ import numpy as np
 from ultralytics import YOLO
 from PIL import Image
 import os
+from pathlib import Path
 
 st.title("YOLO Object Detection Application")
 
 uploaded_file = st.file_uploader("Upload an image or video", type=["jpg", "jpeg", "png", "mp4", "avi"])
 
-model = YOLO(r"C:\Users\91939\Documents\projects\plate_detection\best.pt")
-
+model = YOLO(r"C:\Users\91939\Documents\projects\plate_detection\plate_dection_project\best.pt")
 
 
 def process_media(input_path, output_path):
+    stem = Path(input_path).stem
     if input_path.lower().endswith(('.jpg', '.jpeg', '.png')):
         predict_and_save_image(input_path, output_path)
     elif input_path.lower().endswith(('.mp4', '.avi')):
@@ -21,6 +22,7 @@ def process_media(input_path, output_path):
     else:
         st.error("Unsupported file format. Please upload an image or video.")
         return None
+    return output_path
     
 
 
@@ -71,8 +73,6 @@ def predict_and_save_video(video_path, output_video_path):
         out.write(frame)
     cap.release()
     out.release()
-    out.release()
-    st.video(output_video_path)
     return output_video_path
 
 
@@ -80,18 +80,23 @@ def predict_and_save_video(video_path, output_video_path):
 
 
 if uploaded_file is not None:
-        input_path =f"temp/{uploaded_file.name}"
-        output_path = f"output/{uploaded_file.name}"
-        with open(input_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        st.write("Processing media...")
-        result_path = process_media(input_path, output_path)
-        st.write("Processing complete.")
+    os.makedirs("temp", exist_ok=True)
+    os.makedirs("output", exist_ok=True)
 
-        
-        #Build logic
-        if result_path is not None:
-            if result_path.endswith(('.jpg', '.jpeg', '.png')):
-                st.image(result_path)
-            elif result_path.endswith(('.mp4', '.avi')):
-                st.video(result_path)
+    input_path = f"temp/{uploaded_file.name}"
+    output_path = f"output/{uploaded_file.name}"
+
+    with open(input_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+
+    st.write("Processing media...")
+    result_path = process_media(input_path, output_path)
+    st.write("Processing complete.")
+
+    if result_path and os.path.exists(result_path):
+        if result_path.endswith(('.jpg', '.jpeg', '.png')):
+            st.image(result_path)
+        elif result_path.endswith(('.mp4', '.avi')):
+            st.video(result_path)
+    else:
+        st.error("Processed file not found.")
